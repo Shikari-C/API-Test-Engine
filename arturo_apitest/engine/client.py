@@ -181,7 +181,7 @@ class Client:
         return self._poll(request_id, identity)
 
     def _poll(self, request_id: str, identity: Identity | None) -> Response:
-        base = self.r.resolve("{{eve_base_url}}") if "{{" not in self.s.base_url else self.s.base_url
+        base = self.r.resolve("{{base_url}}") if "{{" not in self.s.base_url else self.s.base_url
         base = base or self.s.base_url
         url = f"{base}/v3/tasks?request_id={request_id}"
         headers = {"Content-Type": "application/json", "User-Agent": self._next_ua()}

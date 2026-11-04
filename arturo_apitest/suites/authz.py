@@ -100,6 +100,6 @@ def _request_id(resp) -> str | None:
 
 
 def _poll_as(client: Client, poller: RequestTemplate, identity: Identity, rid: str, settings: Settings):
-    base = settings.base_url or client.r.resolve("{{eve_base_url}}")
+    base = settings.base_url or client.r.resolve("{{base_url}}")
     url = f"{base}/v3/tasks?request_id={rid}"
     return client.send(poller, identity, url_override=url)

@@ -1,6 +1,6 @@
 """Postman v2.1 collection parser -> flat list of RequestTemplate objects.
 
-Handles the quirks seen in the real EVE/Arturo collections:
+Handles the quirks seen in the real target collections:
   * duplicate `account-id` / `api-key` headers (enabled + several disabled);
     we keep enabled ones and let the client override auth per-identity.
   * `//` line comments and trailing commas inside raw JSON bodies.

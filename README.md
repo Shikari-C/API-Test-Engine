@@ -1,6 +1,6 @@
 # arturo_apitest
 
-Standalone, **oracle-driven** API security harness for the EVE / Arturo task
+Standalone, **oracle-driven** API security harness for task-based verification
 APIs. It consumes your Postman v2.1 collections as *structure* and runs
 OWASP-API + ML-backend test suites. The design goal is **no false positives**:
 nothing is reported unless it is confirmed by a differential, an out-of-band
@@ -40,9 +40,9 @@ cp config/overrides.example.yaml   config/overrides.yaml     # non-secret {{vars
 
 **Environment variables** resolve in this order (later wins): Postman
 environment export → `overrides.yaml` → `base_url`. You do **not** put
-`eve_account_id` / `eve_api_key` anywhere — auth is injected per-identity.
+`account_id` / `api_key` anywhere — auth is injected per-identity.
 Either export a Postman environment and point `postman_env:` at it, or just set
-`eve_base_url` in `overrides.yaml` by hand.
+`base_url` in `overrides.yaml` by hand.
 
 **Identities** — the authz suite needs two separate authorised tenants in
 `identities.yaml` (`A` and `B`). Without them the authz suite skips itself.

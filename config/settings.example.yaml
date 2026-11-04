@@ -1,14 +1,14 @@
-# Arturo API security testing — engine settings.
+# API security testing — engine settings.
 # Copy to config/settings.yaml and edit. settings.yaml is gitignored.
 
 # --- target -----------------------------------------------------------------
-# eve_base_url is resolved from the Postman env file if present; this is a
+# base_url is resolved from the Postman env file if present; this is a
 # fallback / override. Point ONLY at an environment you are authorised to test.
-base_url: "https://eve.idfystaging.com"
+base_url: "https://api.example.com"
 
 # --- environment variable sources ------------------------------------------
 # Postman environment export (File > Export in Postman). Optional.
-postman_env: "config/eve.postman_environment.json"
+postman_env: "config/target.postman_environment.json"
 # Manual overrides (flat JSON/YAML): anything here wins over the Postman env.
 overrides: "config/overrides.yaml"
 

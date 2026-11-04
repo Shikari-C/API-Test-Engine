@@ -6,8 +6,8 @@
 
 A:
   label: "tenant-A"
-  account_id: "aa0a2711-291d-49e3-aeb1-e03c8a835af4"
-  api_key: "138af26fb8e7/ee7c1897-e077-4599-96c3-5e1fd91de467"
+  account_id: ""
+  api_key: ""
 
 B:
   label: "tenant-B"

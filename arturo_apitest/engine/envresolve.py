@@ -7,7 +7,7 @@ Two sources, merged in priority order (later wins):
 The engine never reads credentials out of the collection itself. Auth
 (`account-id` / `api-key`) is injected per-identity by the client, so the
 resolver deliberately does NOT need those two to render a template; it only
-needs non-secret vars like `eve_base_url` and any chained `request_id`s.
+needs non-secret vars like `base_url` and any chained `request_id`s.
 """
 from __future__ import annotations
 

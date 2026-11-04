@@ -75,11 +75,11 @@ def main(argv: list[str] | None = None) -> int:
 
     templates: list[RequestTemplate] = parse_many(paths)
 
-    # env resolver: base_url seeds eve_base_url if the files don't.
+    # env resolver: base_url seeds base_url if the files don't.
     resolver = EnvResolver.from_sources(
         postman_env=settings.postman_env if settings.postman_env and Path(settings.postman_env).exists() else None,
         overrides=settings.overrides if settings.overrides and Path(settings.overrides).exists() else None,
-        extra={"eve_base_url": settings.base_url} if settings.base_url else None,
+        extra={"base_url": settings.base_url} if settings.base_url else None,
     )
 
     # --- security hygiene surfacing (always, free) --------------------------
