@@ -57,7 +57,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--config", required=True)
     ap.add_argument("--collections", nargs="+", required=True,
                     help="collection json paths or globs")
-    ap.add_argument("--suites", default="authz,injection,ml,broken_auth,misconfig,bopla,file_upload")
+    ap.add_argument("--suites",
+                    default="authz,injection,ml,broken_auth,misconfig,bopla,file_upload,redirect_host")
     ap.add_argument("--out", default="out")
     ap.add_argument("--dry-run", action="store_true",
                     help="parse + plan only; no network")
@@ -178,6 +179,15 @@ def main(argv: list[str] | None = None) -> int:
                 findings += mass_assignment.run(templates, client, settings, identity)
             else:
                 print("bopla: skipped (need identity A)")
+
+        if "redirect_host" in suites:
+            from .suites import redirect_host
+            ids = load_identities(settings.identities_file) if settings.identities_file else {}
+            identity = ids.get("A")
+            if identity:
+                findings += redirect_host.run(templates, client, settings, identity)
+            else:
+                print("redirect_host: skipped (need identity A)")
 
         if "file_upload" in suites:
             from .suites import file_upload
