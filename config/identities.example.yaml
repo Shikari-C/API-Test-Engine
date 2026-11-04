@@ -1,0 +1,15 @@
+# Two SEPARATE tenants for the authz differential. Copy to identities.yaml.
+# These values are SECRETS — identities.yaml is gitignored. Never commit real keys.
+#
+# account-id in this API looks like  "<12hex>/<uuid>"  and api-key is a uuid.
+# Use your own two authorised staging accounts.
+
+A:
+  label: "tenant-A"
+  account_id: "aa0a2711-291d-49e3-aeb1-e03c8a835af4"
+  api_key: "138af26fb8e7/ee7c1897-e077-4599-96c3-5e1fd91de467"
+
+B:
+  label: "tenant-B"
+  account_id: "REPLACE_WITH_B_ACCOUNT_ID"
+  api_key: "REPLACE_WITH_B_API_KEY"

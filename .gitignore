@@ -1,0 +1,24 @@
+# secrets — never commit
+config/settings.yaml
+config/identities.yaml
+config/overrides.yaml
+config/*.postman_environment.json
+
+# collections may themselves contain leaked creds — keep them out of git
+collections/*.json
+
+# corpus samples + generated abuse inputs
+corpus/samples/
+corpus/_abuse/
+corpus/manifest.csv
+
+# outputs
+out/
+__pycache__/
+*.pyc
+.venv/
+
+# python virtualenv (this project keeps it in ./api)
+api/
+venv/
+env/

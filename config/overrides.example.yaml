@@ -1,0 +1,9 @@
+# Manual {{var}} overrides — wins over the Postman environment export.
+# Use this if you don't want to export a Postman environment at all: just set
+# the non-secret vars the templates reference. Auth is injected per-identity,
+# so you do NOT need eve_account_id / eve_api_key here.
+
+eve_base_url: "https://eve.idfystaging.com"
+# chained request_ids, group ids, etc. can be pinned here if you want
+# deterministic replays, e.g.:
+# group_id: "8e16424a-58fc-4ba4-ab20-5bc8e7c3c41e"

@@ -1,0 +1,48 @@
+# Arturo API security testing — engine settings.
+# Copy to config/settings.yaml and edit. settings.yaml is gitignored.
+
+# --- target -----------------------------------------------------------------
+# eve_base_url is resolved from the Postman env file if present; this is a
+# fallback / override. Point ONLY at an environment you are authorised to test.
+base_url: "https://eve.idfystaging.com"
+
+# --- environment variable sources ------------------------------------------
+# Postman environment export (File > Export in Postman). Optional.
+postman_env: "config/eve.postman_environment.json"
+# Manual overrides (flat JSON/YAML): anything here wins over the Postman env.
+overrides: "config/overrides.yaml"
+
+# --- identities for the authz differential ----------------------------------
+# A and B are two SEPARATE tenants. The oracle only flags BOLA/BFLA when B
+# actually receives A's data. Fill these in config/identities.yaml (gitignored).
+identities_file: "config/identities.yaml"
+
+# --- Burp / upstream proxy --------------------------------------------------
+proxy:
+  enabled: false            # true routes every request through Burp
+  url: "http://127.0.0.1:8080"
+  verify_tls: false         # Burp uses its own CA; usually false while proxying
+
+# --- oracle tuning ----------------------------------------------------------
+oracle:
+  stability_runs: 3         # re-run every candidate finding N times
+  stability_required: 3     # must reproduce this many times to report
+  request_timeout_s: 30
+  poll_interval_s: 2
+  poll_max_s: 120           # max wait for an async task to complete
+
+# --- out-of-band confirmation (SSRF / blind injection) ----------------------
+# Only flag blind classes on a real callback hit. Put your Collaborator /
+# interactsh domain here; leave blank to skip OOB-dependent checks.
+oob:
+  domain: ""                # e.g. "abcd1234.oastify.com"
+
+# --- rate limiting (be a good citizen even against staging) -----------------
+throughput:
+  max_concurrency: 4
+  per_request_delay_ms: 0
+
+# --- ML / image suite -------------------------------------------------------
+ml:
+  corpus_dir: "corpus"      # labelled genuine/forged docs live here
+  llm_in_pipeline: true     # confirmed: enables the prompt-injection class
