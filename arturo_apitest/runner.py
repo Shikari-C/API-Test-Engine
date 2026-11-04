@@ -57,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--config", required=True)
     ap.add_argument("--collections", nargs="+", required=True,
                     help="collection json paths or globs")
-    ap.add_argument("--suites", default="authz,injection,ml,broken_auth,misconfig,bopla")
+    ap.add_argument("--suites", default="authz,injection,ml,broken_auth,misconfig,bopla,file_upload")
     ap.add_argument("--out", default="out")
     ap.add_argument("--dry-run", action="store_true",
                     help="parse + plan only; no network")
@@ -178,6 +178,24 @@ def main(argv: list[str] | None = None) -> int:
                 findings += mass_assignment.run(templates, client, settings, identity)
             else:
                 print("bopla: skipped (need identity A)")
+
+        if "file_upload" in suites:
+            from .suites import file_upload
+            from .engine.catcher import Catcher
+            ids = load_identities(settings.identities_file) if settings.identities_file else {}
+            identity = ids.get("A")
+            if not identity:
+                print("file_upload: skipped (need identity A)")
+            elif not settings.upload_public_base:
+                print("file_upload: skipped (set upload.public_base to a URL the target can "
+                      "reach, plus upload.bind_port, so the catcher can confirm parsing)")
+            else:
+                catcher = Catcher(settings.upload_bind_host, settings.upload_bind_port,
+                                  settings.upload_public_base).start()
+                try:
+                    findings += file_upload.run(templates, client, settings, identity, catcher)
+                finally:
+                    catcher.stop()
 
     meta = {**plan, "base_url": settings.base_url, "proxy": settings.proxy_enabled,
             "stability_runs": settings.stability_runs,

@@ -46,3 +46,13 @@ throughput:
 ml:
   corpus_dir: "corpus"      # labelled genuine/forged docs live here
   llm_in_pipeline: true     # confirmed: enables the prompt-injection class
+
+# --- unrestricted file / document-parsing suite (file_upload) ---------------
+# The suite hosts hostile SVG/XML/HTML at a URL the backend fetches, and
+# confirms a finding only when the backend PARSES it (XXE/SSRF callback).
+# The target must be able to reach public_base — use a VPS, an ngrok/cloudflared
+# tunnel, or a routable LAN address. Leave public_base blank to skip the suite.
+upload:
+  bind_host: "0.0.0.0"       # where the catcher listens locally
+  bind_port: 8085            # local port
+  public_base: ""            # e.g. "https://abcd.ngrok-free.app" or "http://203.0.113.9:8085"

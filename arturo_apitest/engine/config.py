@@ -43,6 +43,9 @@ class Settings:
     poll_max_s: int = 120
     oob_domain: str = ""
     oob_hits_file: str = ""
+    upload_bind_host: str = "0.0.0.0"
+    upload_bind_port: int = 0
+    upload_public_base: str = ""
     max_concurrency: int = 4
     per_request_delay_ms: int = 0
     corpus_dir: str = "corpus"
@@ -57,6 +60,7 @@ class Settings:
         oob = d.get("oob", {}) or {}
         tp = d.get("throughput", {}) or {}
         ml = d.get("ml", {}) or {}
+        up = d.get("upload", {}) or {}
         return cls(
             base_url=d.get("base_url", ""),
             postman_env=d.get("postman_env"),
@@ -72,6 +76,9 @@ class Settings:
             poll_max_s=int(oracle.get("poll_max_s", 120)),
             oob_domain=oob.get("domain", "") or "",
             oob_hits_file=oob.get("hits_file", "") or "",
+            upload_bind_host=up.get("bind_host", "0.0.0.0"),
+            upload_bind_port=int(up.get("bind_port", 0) or 0),
+            upload_public_base=up.get("public_base", "") or "",
             max_concurrency=int(tp.get("max_concurrency", 4)),
             per_request_delay_ms=int(tp.get("per_request_delay_ms", 0)),
             corpus_dir=ml.get("corpus_dir", "corpus"),

